@@ -1,0 +1,9 @@
+{
+    "name": "dnadesign/rhino-fields",
+    "license": "Copyright 2017 DNA Design",
+    "authors": [],
+    "type": "silverstripe-module",
+    "require": {
+    	"dnadesign/rhino-lite": "dev-master"
+    }
+}
