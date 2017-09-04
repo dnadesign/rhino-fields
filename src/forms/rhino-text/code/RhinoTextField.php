@@ -1,15 +1,6 @@
 <?php
 
-namespace DNADesign\rhinofields;
-
-use DNADesign\rhinofields\RhinoMarkedField;
-use EditableTextField;
-use TextField;
-use CheckboxField;
-
 class RhinoTextField extends EditableTextField implements RhinoMarkedField {
-
-	private static $table_name = 'RhinoTextField';
 
 	private static $hidden = false;
 
