@@ -1,6 +1,13 @@
 <?php
 
+namespace DNADesign\rhinofields;
+
+use EditableOption;
+use RequiredFields;
+
 class EditableMultiChoiceOption extends EditableOption {
+
+	private static $table_name = 'EditableMultiChoiceOption';
 
 	private static $db = array(
 		'IsCorrectAnswer' => 'Boolean'

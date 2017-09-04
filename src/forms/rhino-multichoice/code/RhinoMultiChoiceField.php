@@ -1,10 +1,25 @@
 <?php
 
+namespace DNADesign\rhinofields;
+
+use DNADesign\rhinofields\RhinoMarkedField;
+use DNADesign\rhinofields\EditableMultiChoiceOption;
+use EditableRadioField;
+use GridFieldConfig_RelationEditor;
+use GridFieldDataColumns;
+use GridFieldOrderableRows;
+use GridField;
+use CheckboxField;
+use OptionsetField;
+use LiteralField;
+
 class EditableMultiChoiceField extends EditableRadioField implements RhinoMarkedField {
+
+	private static $table_name = 'EditableMultiChoiceField';
 
 	private static $singular_name = 'Multi Choice Field';
 
-	private static $optionClass = 'EditableMultiChoiceOption';
+	private static $optionClass = 'DNADesign\rhinofields\EditableMultiChoiceOption';
 
 	private static $db = array(
 		'RandomiseOptions' => 'Boolean'
@@ -99,7 +114,6 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 	*/
 	public function getFormField() {
 		$field = OptionsetField::create($this->Name, $this->EscapedTitle, $this->getOptionsMap());
-
 		return $field;
 	}
 

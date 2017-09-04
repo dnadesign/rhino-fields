@@ -1,12 +1,21 @@
 <?php
 
+namespace DNADesign\rhinofields;
+
 /**
 * ReadOnly field that display the elapsed time 
 * starting when the page is loaded
 * Javascript is hardcoded on the template
 */
 
+use DNADesign\rhinofields\RhinoMarkedField;
+use EditableFormField;
+use TimeField;
+use TextField;
+
 class RhinoTimerField extends EditableFormField implements RhinoMarkedField {
+
+	private static $table_name = 'RhinoTimerField';
 
 	private static $hidden = false;
 
