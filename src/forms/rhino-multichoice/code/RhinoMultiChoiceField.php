@@ -14,6 +14,11 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 		"Options" => 'EditableMultiChoiceOption'
 	);
 
+	private static $summary_fields = array(
+		'Value' => 'Title',
+		'IsCorrectAnswer' => 'Is Correct Answer?'
+	);
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
@@ -55,11 +60,6 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 		$config->removeComponentsByType('GridFieldAddExistingAutocompleter');
 
 		$dataColumns = new GridFieldDataColumns();
-		$dataColumns->setDisplayFields(array(
-			'Value' => 'Title',
-			'IsCorrectAnswer' => 'Is Correct Answer?'
-		));
-
 		$dataColumns->setFieldFormatting(array(
 			'IsCorrectAnswer' => function($value, $item) {
 				return ($value) ? '<strong>Yes</strong>' : 'No';
@@ -74,7 +74,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 			'Options',
 			$this->Options(),
 			$config
-		)->setModelClass(self::$optionClass);
+		)->setModelClass($this->stat('optionClass'));
 
 		$fields->addFieldToTab('Root.Main', $gridfield);
 
@@ -111,7 +111,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 	*/
 	protected function getOptionsMap() {
 		$optionClass = $this->config()->optionClass;
-		$options = $optionClass::get();
+		$options = $optionClass::get()->filter('ParentID', $this->ID);
 
 		// Randomise options if required
 		if ($this->RandomiseOptions) {
