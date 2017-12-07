@@ -10,6 +10,10 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 		'RandomiseOptions' => 'Boolean'
 	);
 
+	private static $has_one = array(
+		'Image' => 'Image'
+	);
+
 	private static $casting = array(
 		"Options" => 'EditableMultiChoiceOption'
 	);
@@ -26,6 +30,10 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 		$fields->removeByName('Name');
 		$fields->removeByName('Options.Options');
 		$fields->removeByName('Options');
+
+		// Image
+		$image = UploadField::create('Image', 'Image');
+		$fields->addFieldToTab('Root.Main', $image, 'RightTitle');
 
 		$showWarning = true;
 
@@ -98,7 +106,12 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 	* @return CustomOptionsetField
 	*/
 	public function getFormField() {
-		$field = OptionsetField::create($this->Name, $this->EscapedTitle, $this->getOptionsMap());
+		$field = RhinoMultiChoiceField::create($this->Name, $this->EscapedTitle, $this->getOptionsMap());
+
+		if ($this->Image()->exists()) {
+			$field->customise(array('Image' => $this->Image()));
+		}
+
 		return $field;
 	}
 
@@ -128,7 +141,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 			});
 		}
 
-		return $options->map('Value', 'Title');
+		return $options->map()->toArray();
 	}
 
 	/**
@@ -156,5 +169,9 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 
 		return $mark;
 	}
-
 }
+
+/**
+* Custom OptionsetField to be able to customise the template
+*/
+class RhinoMultiChoiceField extends OptionsetField {}
