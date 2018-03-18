@@ -141,7 +141,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 			});
 		}
 
-		return $options->map()->toArray();
+		return $options->map('Value', 'Title')->toArray();
 	}
 
 	/**
