@@ -18,11 +18,6 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 		"Options" => 'EditableMultiChoiceOption'
 	);
 
-	private static $summary_fields = array(
-		'Value' => 'Title',
-		'IsCorrectAnswer' => 'Is Correct Answer?'
-	);
-
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
