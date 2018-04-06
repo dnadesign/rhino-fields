@@ -146,21 +146,43 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 	*/
 	public function getCorrectAnswers() {
 		$optionClass = $this->config()->optionClass;
-		return $optionClass::get()->filter('IsCorrectAnswer', true);
+		return $optionClass::get()->filter(array('IsCorrectAnswer' => true, 'ParentID' => $this->owner->ID));
+	}
+
+	/**
+	* Return the First the answers for this field for a given value
+	* We assume that there isn't 2 answers with the same value
+	*
+	* @param String
+	* @return EditableOption
+	*/
+	public function getAnswerForValue($value) {
+		$optionClass = $this->config()->optionClass;
+		return $optionClass::get()->filter(array('Value' => $value, 'ParentID' => $this->owner->ID))->First();
 	}
 
 	/**
 	* Check if the asnwer given matches the expected one
+	*
+	* @param String
+	* @return String 
 	*/
 	public function pass_or_fail($value = null) {
 		if (!$value) return null;
-		if ($this->getCorrectAnswers()->Count() == 0) return 'pass';
+		
+		// Find the ID of the expect answers
+		$expected = $this->getCorrectAnswers()->column('ID');
 
-		$expected = $this->getCorrectAnswers()->column('Value');
+		// If no right answer is supplied, pass by default
+		if (empty($expected)) return 'pass';
 
-		$mark = (in_array($value, $expected)) ? 'pass' : 'fail';
+		// Find the Editable Option ID object from the value given
+		$given = $this->getAnswerForValue($value);
 
-		$this->extend('updateMark', $value, $mark);
+		// Check if the ID of the given option belongs to the expected Option IDs
+		$mark = ($given && $given->exists() && in_array($given->ID, $expected)) ? 'pass' : 'fail';
+
+		$this->extend('updateMark', $value, $mark, $given);
 
 		return $mark;
 	}
