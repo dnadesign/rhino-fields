@@ -3,7 +3,7 @@
 		<li class="$Class orderable-listitem" data-id="$ID" tabindex="0">
 			<span class="orderable-listitem-inner">
 				<span class="orderable-listitem-handle"><span class="sr-only">drag</span></span>
-				<span class="orderable-listitem-title">$Title $ID</span>
+				<span class="orderable-listitem-title">$Title</span>
 			</span>
 		</li>
 	<% end_loop %>
