@@ -1,10 +1,19 @@
 <?php
 
-class EditableOrderableOptionsField extends EditableMultipleOptionField implements RhinoMarkedField {
+class EditableOrderableOptionsField extends EditableMultipleOptionField implements RhinoMarkedField {	
 
 	private static $singular_name = 'Orderable Options Field';
 
-	private static $default_min_options = 3;
+	/**
+	* @config
+	*/
+	private static $min_options = -1;
+
+	/**
+	* @config
+	*/
+	private static $max_options = -1;
+
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -14,15 +23,15 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 		$fields->removeByName('Options.Options');
 		$fields->removeByName('Options');
 
-		$showWarning = true;
+		$showWarning = ($this->config()->get('min_options') && $this->config()->get('min_options') >= 0);
 
 		/**
 		* Show a warning only if there are more than one option
 		* or if none of the option have been set as the correct answer
 		*/
-		if ($this->Options()->Count() >= $this->default_min_options) {
+		if ($showWarning === true && $this->Options()->Count() >= $this->config()->get('min_options')){
 			$showWarning = false;
-		} 
+		}
 
 		if($showWarning) {
 			$fields->addFieldToTab(
@@ -38,8 +47,30 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 			);
 		}
 
-		$config = GridFieldConfig_RelationEditor::create();
+		$config = GridFieldConfig_RecordEditor::create();
 		$config->addComponent(new GridFieldOrderableRows('Sort'));
+
+		/**
+		* If we have reached the max amount of options
+		* remove GridFieldAddNewButton
+		*/
+		if ($this->config()->get('max_options') 
+			&& $this->config()->get('max_options') >= 0 
+			&& $this->Options()->Count() >= $this->config()->get('max_options')
+		){
+			$config->removeComponentsByType('GridFieldAddNewButton');
+			$fields->addFieldToTab(
+				'Root.Main',
+				new LiteralField(
+					'warning',
+					'<p class="message warning">
+						<strong>
+							'.sprintf('You cannot add more than %s options.', $this->config()->get('max_options')).'
+						</strong>
+					</p>'
+				)
+			);
+		}
 
 		$gridfield = GridField::create(
 			'Options',
