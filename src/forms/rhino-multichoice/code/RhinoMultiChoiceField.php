@@ -102,9 +102,10 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 	*/
 	public function getFormField() {
 		$field = RhinoMultiChoiceField::create($this->Name, $this->EscapedTitle, $this->getOptionsMap());
+		$field->setSourceField($this);
 
 		if ($this->Image()->exists()) {
-			$field->customise(array('Image' => $this->Image()));
+			$field->customise(array('Image' => $this->Image(), 'Source' => $this));
 		}
 
 		return $field;
@@ -191,4 +192,17 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 /**
 * Custom OptionsetField to be able to customise the template
 */
-class RhinoMultiChoiceField extends OptionsetField {}
+class RhinoMultiChoiceField extends OptionsetField {
+
+	protected $sourceField;
+
+	public function setSourceField($field) {
+		$this->sourceField = $field;
+		return $this;
+	}
+
+	public function getSourceField() {
+		return $this->sourceField;
+	}
+
+}

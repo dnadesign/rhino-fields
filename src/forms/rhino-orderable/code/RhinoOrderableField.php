@@ -84,7 +84,7 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 		return $fields;
 	}
 
-		/**
+	/**
 	* Use the custom class for OptionsetField in order to use Objects instead of flat arrays
 	* and set the custom template for it
 	* and pass the Image object to the template for the field itself
@@ -93,6 +93,7 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 	*/
 	public function getFormField() {
 		$field = RhinoOrderableOptionsField::create($this->Name, $this->EscapedTitle, $this->getOptionsMap());
+		$field->setSourceField($this);
 		return $field;
 	}
 
@@ -135,7 +136,11 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 	public function pass_or_fail($value = null) {
 		$expected = $this->Options()->column('ID');
 		$given = json_decode($value);
-		return ($expected === $given);
+
+		$mark = ($expected === $given) ? 'pass' : 'fail';
+		$this->extend('updateMark', $value, $mark);
+
+		return $mark;
 	}
 	
 }
@@ -143,6 +148,7 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 class RhinoOrderableOptionsField extends TextField {
 
 	protected $options;
+	protected $sourceField;
 
 	public function __construct($name, $title = null, $options = null) {
 		if ($options) {
@@ -160,6 +166,15 @@ class RhinoOrderableOptionsField extends TextField {
 
 	public function getOptions() {
 		return $this->options;
+	}
+
+	public function setSourceField($field) {
+		$this->sourceField = $field;
+		return $this;
+	}
+
+	public function getSourceField() {
+		return $this->sourceField;
 	}
 
 }
