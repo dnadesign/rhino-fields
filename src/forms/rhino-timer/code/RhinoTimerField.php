@@ -1,75 +1,87 @@
 <?php
 
+namespace DNADesign\Rhino\Fields;
+
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TimeField;
+use SilverStripe\UserForms\Model\EditableFormField;
+
 /**
-* ReadOnly field that display the elapsed time 
-* starting when the page is loaded
-* Javascript is hardcoded on the template
-*/
+ * ReadOnly field that display the elapsed time
+ * starting when the page is loaded
+ * Javascript is hardcoded on the template
+ */
+class RhinoTimerField extends EditableFormField implements RhinoMarkedField
+{
 
+    private static $hidden = false;
 
-class RhinoTimerField extends EditableFormField implements RhinoMarkedField {
+    private static $singular_name = 'Timer';
 
-	private static $hidden = false;
+    private static $defaults = array(
+        'Default' => '00:00:00'
+    );
 
-	private static $singular_name = 'Timer';
+    private static $db = array(
+        'TimeLimit' => 'Time'
+    );
 
-	private static $defaults = array(
-		'Default' => '00:00:00'
-	);
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
 
-	private static $db = array(
-		'TimeLimit' => 'Time'
-	);
+        $fields->removeByName('MergeField');
+        $fields->removeByName('Name');
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+        $time = TimeField::create('TimeLimit')
+            ->setConfig('timeformat', 'HH:mm:ss')
+            ->setRightTitle('hh:mm:ss');
+        $fields->addFieldToTab('Root.Main', $time);
 
-		$fields->removeByName('MergeField');
-		$fields->removeByName('Name');
+        return $fields;
+    }
 
-		$time = TimeField::create('TimeLimit')
-			->setConfig('timeformat', 'HH:mm:ss')
-			->setRightTitle('hh:mm:ss');
-		$fields->addFieldToTab('Root.Main', $time);
+    /**
+     * @return TextareaField|TextField
+     */
+    public function getFormField()
+    {
+        $field = TextField::create($this->Name, $this->EscapedTitle, $this->Default)
+            ->setFieldHolderTemplate('UserFormsField_holder')
+            ->setTemplate('RhinoTimerField')
+            ->setValue('00:00:00');
 
-		return $fields;
-	}
+        $this->doUpdateFormField($field);
 
-	/**
-	 * @return TextareaField|TextField
-	 */
-	public function getFormField() {
-		$field = TextField::create($this->Name, $this->EscapedTitle, $this->Default)
-				->setFieldHolderTemplate('UserFormsField_holder')
-				->setTemplate('RhinoTimerField')
-				->setValue('00:00:00');
+        return $field;
+    }
 
-		 $this->doUpdateFormField($field);
+    /**
+     * If the timevalue exceeds the Time limit
+     * Return a Fail mark
+     */
+    public function pass_or_fail($value = null)
+    {
+        if (!$value) {
+            return null;
+        }
+        if (!$this->TimeLimit) {
+            return 'pass';
+        }
 
-		return $field;
-	}
+        $limit = strtotime($this->TimeLimit);
+        $timed = strtotime($value);
 
-	/**
-	* If the timevalue exceeds the Time limit
-	* Return a Fail mark
-	*/
-	public function pass_or_fail($value = null) {
-		if (!$value) return null;
-		if (!$this->TimeLimit) return 'pass';
+        $mark = null;
 
-		$limit = strtotime($this->TimeLimit);
-		$timed = strtotime($value);
+        // Compare times
+        if ($limit || $timed) {
+            $mark = ($timed > $limit) ? 'fail' : 'pass';
+        }
 
-		$mark = null;
+        $this->extend('updateMark', $value, $mark);
 
-		// Compare times
-		if ($limit || $timed)  {
-			$mark =  ($timed > $limit) ? 'fail' : 'pass';
-		}
-
-		$this->extend('updateMark', $value, $mark);
-
-		return $mark;
-	} 
+        return $mark;
+    }
 
 }

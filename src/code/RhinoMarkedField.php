@@ -1,7 +1,9 @@
 <?php
 
-Interface RhinoMarkedField {
+namespace DNADesign\Rhino\Fields;
 
-	public function pass_or_fail($value = null);
+Interface RhinoMarkedField
+{
+    public function pass_or_fail($value = null);
 
 }

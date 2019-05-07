@@ -1,37 +1,45 @@
 <?php
 
-class EditableMultiChoiceOption extends EditableOption {
+namespace DNADesign\Rhino\Fields;
 
-	private static $db = array(
-		'IsCorrectAnswer' => 'Boolean'
-	);
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\UserForms\Model\EditableFormField\EditableOption;
 
-	private static $summary_fields = array(
-		'Value' => 'Title',
-		'IsCorrectAnswer' => 'Is Correct Answer?'
-	);
+class EditableMultiChoiceOption extends EditableOption
+{
+    private static $db = [
+        'IsCorrectAnswer' => 'Boolean'
+    ];
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+    private static $summary_fields = [
+        'Value' => 'Title',
+        'IsCorrectAnswer' => 'Is Correct Answer?'
+    ];
 
-		$fields->removeByName('Name');
-		$fields->removeByName('Default');
-		$fields->removeByName('Sort');
-		$fields->removeByName('ParentID');
-		$fields->removeByName('Title');
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
 
-		return $fields;
-	}
+        $fields->removeByName('Name');
+        $fields->removeByName('Default');
+        $fields->removeByName('Sort');
+        $fields->removeByName('ParentID');
+        $fields->removeByName('Title');
 
-	public function getCMSValidator() {
-		return new RequiredFields(array('Value'));
-	}
+        return $fields;
+    }
 
-	/**
-	* Make sure the title is the same as the value for display
-	*/
-	public function onBeforeWrite() {
-		parent::onBeforeWrite();
-		$this->Title = $this->Value;
-	}
+    public function getCMSValidator()
+    {
+        return RequiredFields::create(['Value']);
+    }
+
+    /**
+     * Make sure the title is the same as the value for display
+     */
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->Title = $this->Value;
+    }
 }

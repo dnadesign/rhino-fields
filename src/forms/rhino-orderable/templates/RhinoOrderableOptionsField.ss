@@ -1,4 +1,4 @@
-<ol id="orderable-list-{$ID}" class="$extraClass orderable-list orderable-list--{$Options.Count} "<% if Description %> title="$Description"<% end_if %> data-orderable>
+<ol id="orderable-list-{$ID}" class="$extraClass orderable-list orderable-list--{$Options.Count} "<% if $Description %> title="$Description"<% end_if %> data-orderable>
 	<% loop $Options %>
 		<li class="$Class orderable-listitem" data-id="$ID" tabindex="0">
 			<span class="orderable-listitem-inner">

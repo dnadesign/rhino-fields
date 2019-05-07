@@ -1,70 +1,83 @@
 <?php
 
-class RhinoTextField extends EditableTextField implements RhinoMarkedField {
+namespace DNADesign\Rhino\Fields;
 
-	private static $hidden = false;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\UserForms\Model\EditableFormField\EditableTextField;
 
-	private static $singular_name = 'TextField (Marked)';
+class RhinoTextField extends EditableTextField implements RhinoMarkedField
+{
 
-	private static $db = array(
-		'Answers' => 'Varchar(255)',
-		'CaseSensitive' => 'Boolean',
-		'AcceptSentence' => 'Boolean'
-	);	
+    private static $hidden = false;
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+    private static $singular_name = 'TextField (Marked)';
 
-		// Answer
-		$answer = TextField::create('Answers');
-		$answer->setRightTitle('Comma seperated list of expected keywords');
+    private static $db = array(
+        'Answers' => 'Varchar(255)',
+        'CaseSensitive' => 'Boolean',
+        'AcceptSentence' => 'Boolean'
+    );
 
-		// Case Sensitive
-		$case = CheckboxField::create('CaseSensitive');
-		$case->setRightTitle('Answer is case sensitive');
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
 
-		// Sentence
-		$sentence = CheckboxField::create('AcceptSentence');
-		$sentence->setRightTitle('Answer will be correct if sentence contains one or more keywords');
+        // Answer
+        $answer = TextField::create('Answers');
+        $answer->setRightTitle('Comma seperated list of expected keywords');
 
-		$fields->addFieldsToTab('Root.Config', array($answer, $case, $sentence));
+        // Case Sensitive
+        $case = CheckboxField::create('CaseSensitive');
+        $case->setRightTitle('Answer is case sensitive');
 
-		return $fields;
-	}
+        // Sentence
+        $sentence = CheckboxField::create('AcceptSentence');
+        $sentence->setRightTitle('Answer will be correct if sentence contains one or more keywords');
 
-	/**
-	* Check if the asnwer given matches the expected one
-	*/
-	public function pass_or_fail($value = null) {
-		if (!$value) return null;
-		if (!$this->Answers) return 'pass';
+        $fields->addFieldsToTab('Root.Config', array($answer, $case, $sentence));
 
-		$expected = ($this->CaseSensitive) ? $this->Answers : strtolower($this->Answers);
-		$expected = array_map('trim', explode(',', $expected));
+        return $fields;
+    }
 
-		$answer = ($this->CaseSensitive) ? $value : strtolower($value);
-		$mark = null;
+    /**
+     * Check if the asnwer given matches the expected one
+     */
+    public function pass_or_fail($value = null)
+    {
+        if (!$value) {
+            return null;
+        }
+        if (!$this->Answers) {
+            return 'pass';
+        }
 
-		// Check single value
-		if (!$this->AcceptSentence) {			
-			$mark = (in_array($answer, $expected)) ? 'pass' : 'fail';
-		}
-		// If a senentece is given
-		// look for the value within it
-		else {			
-			$matches = 0;
-			foreach($expected as $keyword) {
-				if ((strpos($answer,$keyword) !== false)) {
-					$matches++;
-				}
-			}
+        $expected = ($this->CaseSensitive) ? $this->Answers : strtolower($this->Answers);
+        $expected = array_map('trim', explode(',', $expected));
 
-			$mark = ($matches > 0) ? 'pass' : 'fail';
-		}
+        $answer = ($this->CaseSensitive) ? $value : strtolower($value);
+        $mark = null;
 
-		$this->extend('updateMark', $value, $mark);
+        // Check single value
+        if (!$this->AcceptSentence) {
+            $mark = (in_array($answer, $expected)) ? 'pass' : 'fail';
+        }
+        // If a senentece is given
+        // look for the value within it
+        else {
+            $matches = 0;
+            foreach ($expected as $keyword) {
+                if ((strpos($answer, $keyword) !== false)) {
+                    $matches++;
+                }
+            }
 
-		return $mark;
-	}
+            $mark = ($matches > 0) ? 'pass' : 'fail';
+        }
+
+        $this->extend('updateMark', $value, $mark);
+
+        return $mark;
+    }
 
 }
