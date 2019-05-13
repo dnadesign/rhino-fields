@@ -7,6 +7,8 @@ use SilverStripe\UserForms\Model\EditableFormField\EditableOption;
 
 class EditableMultiChoiceOption extends EditableOption
 {
+    private static $table_name = 'EditableMultiChoiceOption';
+
     private static $db = [
         'IsCorrectAnswer' => 'Boolean'
     ];

@@ -13,6 +13,8 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 {
     private static $singular_name = 'Orderable Options Field';
 
+    private static $table_name = 'EditableOrderableOptionsField';
+
     private static $min_options = -1;
 
     private static $max_options = -1;

@@ -3,6 +3,7 @@
 namespace DNADesign\Rhino\Fields;
 
 use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
@@ -16,14 +17,16 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 {
     private static $singular_name = 'Multi Choice Field';
 
-    private static $optionClass = 'EditableMultiChoiceOption';
+    private static $optionClass = EditableMultiChoiceOption::class;
+
+    private static $table_name = 'EditableMultiChoiceField';
 
     private static $db = [
         'RandomiseOptions' => 'Boolean'
     ];
 
     private static $has_one = [
-        'Image' => 'Image'
+        'Image' => Image::class
     ];
 
     private static $casting = [

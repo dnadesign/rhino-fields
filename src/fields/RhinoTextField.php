@@ -8,6 +8,7 @@ use SilverStripe\UserForms\Model\EditableFormField\EditableTextField;
 
 class RhinoTextField extends EditableTextField implements RhinoMarkedField
 {
+    private static $table_name = 'RhinoTextField';
 
     private static $hidden = false;
 

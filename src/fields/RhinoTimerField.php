@@ -13,10 +13,11 @@ use SilverStripe\UserForms\Model\EditableFormField;
  */
 class RhinoTimerField extends EditableFormField implements RhinoMarkedField
 {
-
     private static $hidden = false;
 
     private static $singular_name = 'Timer';
+
+    private static $table_name = 'RhinoTimerField';
 
     private static $defaults = array(
         'Default' => '00:00:00'
