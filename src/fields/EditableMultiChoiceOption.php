@@ -22,11 +22,13 @@ class EditableMultiChoiceOption extends EditableOption
     {
         $fields = parent::getCMSFields();
 
-        $fields->removeByName('Name');
-        $fields->removeByName('Default');
-        $fields->removeByName('Sort');
-        $fields->removeByName('ParentID');
-        $fields->removeByName('Title');
+        $fields->removeByName([
+            'Name',
+            'Default',
+            'Sort',
+            'ParentID',
+            'Title'
+        ]);
 
         return $fields;
     }

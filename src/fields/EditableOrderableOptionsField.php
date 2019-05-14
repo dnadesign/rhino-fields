@@ -23,10 +23,12 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
     {
         $fields = parent::getCMSFields();
 
-        $fields->removeByName('MergeField');
-        $fields->removeByName('Name');
-        $fields->removeByName('Options.Options');
-        $fields->removeByName('Options');
+        $fields->removeByName([
+            'MergeField',
+            'Name',
+            'Options.Options',
+            'Options'
+        ]);
 
         $showWarning = ($this->config()->get('min_options') && $this->config()->get('min_options') >= 0);
 
@@ -124,7 +126,7 @@ class EditableOrderableOptionsField extends EditableMultipleOptionField implemen
 
         $ids = implode(',', $optionsID);
 
-        $stage = (Versioned::current_stage() == 'Live') ? '_Live' : '';
+        $stage = (Versioned::get_stage() == 'Live') ? '_Live' : '';
         $sort = sprintf('FIELD(%s,%s)', 'EditableOption' . $stage . '.ID', $ids);
 
         $options = $options->alterDataQuery(function ($query) use ($sort) {
