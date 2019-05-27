@@ -81,19 +81,9 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
         $config = GridFieldConfig_RelationEditor::create();
 
         $config->removeComponentsByType([
-            'GridFieldDataColumns',
             'GridFieldFilterHeader',
             'GridFieldAddExistingAutocompleter'
         ]);
-
-        $dataColumns = new GridFieldDataColumns();
-        $dataColumns->setFieldFormatting(array(
-            'IsCorrectAnswer' => function ($value, $item) {
-                return ($value) ? '<strong>Yes</strong>' : 'No';
-            }
-        ));
-
-        $config->addComponent($dataColumns, 'GridFieldEditButton');
         $config->addComponent(new GridFieldOrderableRows('Sort'));
 
         $gridfield = GridField::create(

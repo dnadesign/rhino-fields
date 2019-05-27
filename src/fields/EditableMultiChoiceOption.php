@@ -15,7 +15,7 @@ class EditableMultiChoiceOption extends EditableOption
 
     private static $summary_fields = [
         'Value' => 'Title',
-        'IsCorrectAnswer' => 'Is Correct Answer?'
+        'IsCorrectAnswer.Nice' => 'Is Correct Answer?'
     ];
 
     public function getCMSFields()
