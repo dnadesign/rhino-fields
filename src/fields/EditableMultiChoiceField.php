@@ -6,8 +6,13 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\UserForms\Model\EditableFormField\EditableRadioField;
 use SilverStripe\Versioned\Versioned;
@@ -81,8 +86,10 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
         $config = GridFieldConfig_RelationEditor::create();
 
         $config->removeComponentsByType([
-            'GridFieldFilterHeader',
-            'GridFieldAddExistingAutocompleter'
+            GridFieldFilterHeader::class,
+            GridFieldAddExistingAutocompleter::class,
+            GridFieldPageCount::class,
+            GridFieldPaginator::class
         ]);
         $config->addComponent(new GridFieldOrderableRows('Sort'));
 
@@ -91,7 +98,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
             'Options',
             $this->Options(),
             $config
-        )->setModelClass($this->stat('optionClass'));
+        )->setModelClass($this->config()->optionClass);
 
         $fields->addFieldToTab('Root.Main', $gridfield);
 
@@ -212,6 +219,6 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
     {
         $optionClass = $this->config()->optionClass;
 
-        return $optionClass::get()->filter(array('Value' => $value, 'ParentID' => $this->owner->ID))->First();
+        return $optionClass::get()->filter(array('Value' => $value, 'ParentID' => $this->ID))->First();
     }
 }
