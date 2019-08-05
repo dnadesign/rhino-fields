@@ -4,6 +4,6 @@
     "authors": [],
     "type": "silverstripe-module",
     "require": {
-    	"dnadesign/rhino-lite": "dev-master"
+    	"dnadesign/rhino-lite": "1.0.1"
     }
 }
