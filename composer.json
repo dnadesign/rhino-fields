@@ -3,7 +3,7 @@
     "license": "Copyright 2017 DNA Design",
     "type": "silverstripe-vendormodule",
     "require": {
-        "dnadesign/rhino-lite": "^2.0"
+        "dnadesign/rhino-lite": "^3"
     },
     "autoload": {
         "psr-4": {

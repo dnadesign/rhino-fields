@@ -8,8 +8,8 @@ The process of marking is automatic, done upon submission (see RhinoSubmittedFor
 
 ## Requirements
 
- * SilverStripe 4.0+
- * Rhino Lite
+ * SilverStripe ^5
+ * Rhino Lite ^3
 
 ## Installation
 
