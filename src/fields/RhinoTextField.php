@@ -63,7 +63,7 @@ class RhinoTextField extends EditableTextField implements RhinoMarkedField
         if (!$this->AcceptSentence) {
             $mark = (in_array($answer, $expected)) ? 'pass' : 'fail';
         }
-        // If a senentece is given
+        // If a sentence is given
         // look for the value within it
         else {
             $matches = 0;

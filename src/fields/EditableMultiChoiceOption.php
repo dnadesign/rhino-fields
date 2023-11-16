@@ -2,6 +2,7 @@
 
 namespace DNADesign\Rhino\Fields;
 
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\UserForms\Model\EditableFormField\EditableOption;
 
@@ -22,20 +23,26 @@ class EditableMultiChoiceOption extends EditableOption
     {
         $fields = parent::getCMSFields();
 
-        $fields->removeByName([
+        $fields->removeByName(
+            [
             'Name',
             'Default',
             'Sort',
             'ParentID',
             'Title'
-        ]);
+            ]
+        );
 
         return $fields;
     }
 
-    public function getCMSValidator()
+    public function getCMSCompositeValidator() : CompositeValidator
     {
-        return RequiredFields::create(['Value']);
+        $validator = parent::getCMSCompositeValidator();
+
+        $validator->addValidator(new RequiredFields(['Value']));
+
+        return $validator;
     }
 
     /**

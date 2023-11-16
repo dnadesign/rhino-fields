@@ -46,12 +46,14 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
     {
         $fields = parent::getCMSFields();
 
-        $fields->removeByName([
+        $fields->removeByName(
+            [
             'MergeField',
             'Name',
             'Options.Options',
             'Options'
-        ]);
+            ]
+        );
 
         // Image
         $image = UploadField::create('Image', 'Image');
@@ -85,12 +87,14 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 
         $config = GridFieldConfig_RelationEditor::create();
 
-        $config->removeComponentsByType([
+        $config->removeComponentsByType(
+            [
             GridFieldFilterHeader::class,
             GridFieldAddExistingAutocompleter::class,
             GridFieldPageCount::class,
             GridFieldPaginator::class
-        ]);
+            ]
+        );
         $config->addComponent(new GridFieldOrderableRows('Sort'));
 
         $gridfield = GridField::create(
@@ -169,9 +173,11 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
 
             $sort = sprintf('FIELD(%s,%s)', 'EditableOption' . $stage . '.ID', $ids);
 
-            $options = $options->alterDataQuery(function ($query) use ($sort) {
-                $query->sort($sort);
-            });
+            $options = $options->alterDataQuery(
+                function ($query) use ($sort) {
+                    $query->sort($sort);
+                }
+            );
         }
 
         return $options->map('Value', 'Title')->toArray();
@@ -180,7 +186,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
     /**
      * Check if the asnwer given matches the expected one
      *
-     * @param String
+     * @param  String
      * @return String
      */
     public function pass_or_fail($value = null)
@@ -212,7 +218,7 @@ class EditableMultiChoiceField extends EditableRadioField implements RhinoMarked
      * Return the First the answers for this field for a given value
      * We assume that there isn't 2 answers with the same value
      *
-     * @param String
+     * @param  String
      * @return EditableOption
      */
     public function getAnswerForValue($value)
